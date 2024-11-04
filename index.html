@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱心宠物领养平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 添加 html2canvas 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 添加 jsPDF 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2pdf 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 头部 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">领养表格</h1>
+            <p class="text-gray-600 mt-2">帮每一只宠物都找到温暖的家</p>
+        </header>
+
+        <!-- 主表单 -->
+        <form class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <!-- 宠物基本信息 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">宠物基本信息</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">名字</label>
+                        <input type="text" id="petName" class="w-full px-3 py-2 border rounded-lg" placeholder="请输入宠物名字">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">年龄</label>
+                        <input type="number" 
+                               id="petAge" 
+                               step="0.1" 
+                               class="w-full px-3 py-2 border rounded-lg" 
+                               placeholder="请输入宠物年龄（岁）">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">性别</label>
+                        <select id="petGender" class="w-full px-3 py-2 border rounded-lg">
+                            <option>男生</option>
+                            <option>女生</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">品种</label>
+                        <input type="text" 
+                               id="petBreed"
+                               class="w-full px-3 py-2 border rounded-lg" 
+                               placeholder="例：金毛、橘猫">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">体重（kg）</label>
+                        <input type="number" 
+                               id="petWeight"
+                               step="0.1" 
+                               class="w-full px-3 py-2 border rounded-lg" 
+                               placeholder="请输入体重">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 领养背景 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">领养背景</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">可接受领养地点</label>
+                        <input type="text" 
+                               id="adoptionLocation"
+                               class="w-full px-3 py-2 border rounded-lg" 
+                               placeholder="例：北京市海淀区/全北京/仅限本地">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">宠物来历</label>
+                        <select id="petOrigin" class="w-full px-3 py-2 border rounded-lg">
+                            <option>流浪救助</option>
+                            <option>个人送养</option>
+                            <option>繁育家庭</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 mb-2">领养原因</label>
+                        <textarea id="adoptionReason" class="w-full px-3 py-2 border rounded-lg" rows="3" 
+                            placeholder="请说明送养原因，例：主人工作调动/无力继续照顾等"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 健康状况 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">健康状况</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">疫苗情况</label>
+                        <select id="vaccineStatus" class="w-full px-3 py-2 border rounded-lg">
+                            <option>已完成全部疫苗</option>
+                            <option>部分接种</option>
+                            <option>未接种</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">绝育状</label>
+                        <select id="sterilizationStatus" class="w-full px-3 py-2 border rounded-lg">
+                            <option>已绝育</option>
+                            <option>未绝育</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">是否体检</label>
+                        <select id="medicalCheckStatus" class="w-full px-3 py-2 border rounded-lg">
+                            <option>已体检</option>
+                            <option>未体检</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 mb-2">患病历史</label>
+                        <textarea id="medicalHistory" 
+                                  class="w-full px-3 py-2 border rounded-lg" 
+                                  rows="3" 
+                                  placeholder="请详细描述宠物曾经的病史，如无请填写'无'。例：去年做过一次骨折手术，现已痊愈"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 行为习性 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">行为习性</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">定点大小便情况</label>
+                        <select id="toiletHabit" class="w-full px-3 py-2 border rounded-lg">
+                            <option>已养成习惯</option>
+                            <option>正在训练中</option>
+                            <option>需要训练</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">吵闹状况</label>
+                        <select id="noiseLevel" class="w-full px-3 py-2 border rounded-lg">
+                            <option>安静</option>
+                            <option>偶尔叫</option>
+                            <option>比较爱叫</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">攻击性</label>
+                        <select id="aggressiveness" class="w-full px-3 py-2 border rounded-lg">
+                            <option>无攻击性</option>
+                            <option>轻微攻击性</option>
+                            <option>需要训练</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">性格特征</label>
+                        <select id="personality" class="w-full px-3 py-2 border rounded-lg">
+                            <option>内向安静</option>
+                            <option>外向活泼</option>
+                            <option>性格温和</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">精力旺盛</label>
+                        <select id="energyLevel" class="w-full px-3 py-2 border rounded-lg">
+                            <option>不爱运动,经常躺着</option>
+                            <option>适度运动,精力正常</option>
+                            <option>非常活跃,需要大量运动</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 照片上传 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">宠物照片</h2>
+                <div class="mt-2">
+                    <label class="block">
+                        <span class="sr-only">选择照片</span>
+                        <input type="file" accept="image/*" class="block w-full text-sm text-gray-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-blue-50 file:text-blue-700
+                            hover:file:bg-blue-100
+                        ">
+                    </label>
+                </div>
+            </section>
+
+            <!-- 领养要求 -->
+            <section class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">领养要求</h2>
+                <div class="space-y-6">
+                    <!-- 押金设置 -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="text-gray-700 font-medium">是否需要押金</label>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="depositSwitch" class="sr-only peer" onchange="toggleDeposit()">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        
+                        <!-- 押金相关选项（默认隐藏） -->
+                        <div id="depositOptions" class="hidden space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">押金金额（元）</label>
+                                <input type="number" 
+                                       id="depositAmount" 
+                                       class="w-full px-3 py-2 border rounded-lg" 
+                                       placeholder="请输入押金金额">
+                            </div>
+                            
+                            <!-- 押金退还条件 -->
+                            <div>
+                                <label class="block text-gray-700 mb-2">押金退还条件</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="depositReturn" id="depositReturn1Month" value="1month" class="text-blue-600">
+                                        <span>饲养满1个月</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="depositReturn" id="depositReturn3Month" value="3month" class="text-blue-600">
+                                        <span>饲养满3个月</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="depositReturn" id="depositReturn6Month" value="6month" class="text-blue-600">
+                                        <span>饲养满6个月</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="depositReturn" id="depositReturnVisit" value="visit" class="text-blue-600">
+                                        <span>完成所有回访</span>
+                                    </label>
+                                    <div class="mt-2">
+                                        <input type="text" 
+                                               id="depositReturnOther" 
+                                               class="w-full px-3 py-2 border rounded-lg" 
+                                               placeholder="其他退还条件（选填）">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 回访要求 -->
+                    <div>
+                        <div class="space-y-4">
+                            <!-- 回访时长 -->
+                            <div>
+                                <label class="block text-gray-700 mb-2">回访时长</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="visitDuration" id="visitDuration1Month" class="text-blue-600">
+                                        <span>���养后1个月内</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="visitDuration" id="visitDuration3Month" class="text-blue-600">
+                                        <span>领养后3个月内</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="visitDuration" id="visitDuration6Month" class="text-blue-600">
+                                        <span>领养后6个月内</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 回访频率 -->
+                            <div>
+                                <label class="block text-gray-700 mb-2">回访频率</label>
+                                <select id="visitFrequency" class="w-full px-3 py-2 border rounded-lg">
+                                    <option>每周一次</option>
+                                    <option>每两周一次</option>
+                                    <option>每月一次</option>
+                                    <option>每两月一次</option>
+                                    <option>每季度一次</option>
+                                </select>
+                            </div>
+
+                            <!-- 回访形式 -->
+                            <div>
+                                <label class="block text-gray-700 mb-2">回访形式</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="visitTypeVideo" class="rounded text-blue-600">
+                                        <span>视频回访</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="visitTypeHome" class="rounded text-blue-600">
+                                        <span>上门回访</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="visitTypePhoto" class="rounded text-blue-600">
+                                        <span>照片记录</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <textarea id="visitOtherRequirements" 
+                                          class="w-full px-3 py-2 border rounded-lg" 
+                                          rows="2" 
+                                          placeholder="其他回访要求说明"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- 试养和退回政策 -->
+                <div class="md:col-span-2">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">试养政策</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- 是否接受试养 -->
+                        <div>
+                            <label class="block text-gray-700 mb-2">是否接受试养</label>
+                            <select class="w-full px-3 py-2 border rounded-lg" id="trialSelect" onchange="toggleTrialOptions()">
+                                <option value="yes">接受试养</option>
+                                <option value="no">不接受试养</option>
+                            </select>
+                        </div>
+
+                        <!-- 试养时长 -->
+                        <div id="trialDuration">
+                            <label class="block text-gray-700 mb-2">试养时长</label>
+                            <select class="w-full px-3 py-2 border rounded-lg">
+                                <option>1周</option>
+                                <option>2周</option>
+                                <option>3周</option>
+                            </select>
+                        </div>
+
+                        <!-- 养说明 -->
+                        <div class="md:col-span-2" id="trialNotice">
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <p class="text-yellow-700 text-sm">
+                                    <span class="font-medium">温馨提示：</span>
+                                    试养期结束后��自动转为正式领养，不接受退养。请在试养期间认真考虑是否能够长期饲养。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                function toggleTrialOptions() {
+                    const select = document.getElementById('trialSelect');
+                    const duration = document.getElementById('trialDuration');
+                    const notice = document.getElementById('trialNotice');
+                    
+                    if (select.value === 'no') {
+                        duration.style.display = 'none';
+                        notice.style.display = 'none';
+                    } else {
+                        duration.style.display = 'block';
+                        notice.style.display = 'block';
+                    }
+                }
+                </script>
+                </div>
+            </section>
+
+            <!-- 提交按钮区域 -->
+            <div class="space-y-4">
+                <!-- 按钮组 -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button type="button" onclick="generateAdoptionImage()" 
+                            class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                        生成领养信息图片
+                    </button>
+                    <button type="button" onclick="generateAdoptionAgreement()" 
+                            class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        生成领养协议
+                    </button>
+                </div>
+                
+                <!-- 提醒文字 -->
+                <div class="text-center">
+                    <p class="text-red-600 text-sm">
+                        请确保填写的所有信息真实有效，这将作为正式的领养协议依据
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 集中管理JavaScript代码 -->
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化所有事件监听器
+            initializeEventListeners();
+            // 加载已保存的表单数据
+            loadSavedFormData();
+        });
+
+        // 初始化所有事件监听器
+        function initializeEventListeners() {
+            // 押金开关监听
+            const depositSwitch = document.getElementById('depositSwitch');
+            if (depositSwitch) {
+                depositSwitch.addEventListener('change', toggleDeposit);
+            }
+
+            // 表单提交监听
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            }
+
+            // 为所有输入元素添加实时监听器
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                // 对于本输入、数字输和文本区域，使用 input 事件实现实时保存
+                if (['text', 'number', 'textarea'].includes(element.type) || element.tagName.toLowerCase() === 'textarea') {
+                    element.addEventListener('input', saveFormData);
+                }
+                // 对于选择框、复选框和选框，使用 change 事件
+                else {
+                    element.addEventListener('change', saveFormData);
+                }
+            });
+        }
+
+        // 切换押金选项显示/隐藏
+        function toggleDeposit() {
+            const depositOptions = document.getElementById('depositOptions');
+            const depositSwitch = document.getElementById('depositSwitch');
+            if (depositOptions && depositSwitch) {
+                depositOptions.classList.toggle('hidden', !depositSwitch.checked);
+            }
+        }
+
+        // 保存表单数据到localStorage
+        function saveFormData() {
+            const formData = {};
+            
+            // 集所有输入框的值
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                // 跳过文件输入框
+                if (element.type === 'file') return;
+                
+                // 获取元素的标识符
+                const identifier = element.id || element.name;
+                if (!identifier) return;
+
+                // 根据不同型的输入保存不同的值
+                if (element.type === 'checkbox') {
+                    formData[identifier] = element.checked;
+                } 
+                else if (element.type === 'radio') {
+                    if (element.checked) {
+                        formData[identifier] = element.value;
+                    }
+                } 
+                else {
+                    formData[identifier] = element.value;
+                }
+            });
+
+            // 保存到localStorage
+            try {
+                localStorage.setItem('adoptionFormData', JSON.stringify(formData));
+                console.log('表单数已自动保存'); // 可选的保存确认
+            } catch (e) {
+                console.error('保存表单数据失败:', e);
+            }
+        }
+
+        // 从localStorage加载表单数据
+        function loadSavedFormData() {
+            const savedData = localStorage.getItem('adoptionFormData');
+            if (!savedData) return;
+
+            const formData = JSON.parse(savedData);
+            
+            // 填充表单数据
+            Object.entries(formData).forEach(([key, value]) => {
+                const element = document.getElementById(key) || document.getElementsByName(key)[0];
+                if (!element) return;
+
+                if (element.type === 'checkbox' || element.type === 'radio') {
+                    element.checked = value;
+                } else {
+                    element.value = value;
+                }
+            });
+
+            // 确保押金选项的显示状态正确
+            toggleDeposit();
+            // 确保试养选项的显示状态正确
+            toggleTrialOptions();
+        }
+
+        // 处理表单提交
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            // 集表单数据
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // 验证表单数据
+            if (validateForm(data)) {
+                // 提交成功后清除localStorage中的数据
+                localStorage.removeItem('adoptionFormData');
+                // TODO: 处理表单提交
+                console.log('表单数据：', data);
+            }
+        }
+
+        // 表单验证
+        function validateForm(data) {
+            // TODO: 添加表单验证逻辑
+            return true;
+        }
+
+        // 生成领养信息
+        function generateAdoptionInfo(data) {
+            // TODO: 添加生成领养信息的逻辑
+        }
+
+        // 辅助函数：显示错误息
+        function showError(message) {
+            // TODO: 添加错误提示逻辑
+            console.error(message);
+        }
+
+        // 辅助函数：显示成功信息
+        function showSuccess(message) {
+            // TODO: 添加成功提示逻辑
+            console.log(message);
+        }
+
+        // 添加一个获取表单值的辅助函数，包含默认值处理
+        function getFormValue(elementId, defaultValue = '未填写') {
+            const element = document.getElementById(elementId);
+            if (!element || !element.value) return defaultValue;
+            
+            const value = String(element.value).trim();
+            return value || defaultValue;
+        }
+
+        // 添加一个获取押金退还条件的辅助函数
+        function getDepositReturnCondition() {
+            const conditions = {
+                'depositReturn1Month': '饲养满1个月',
+                'depositReturn3Month': '饲养满3个月',
+                'depositReturn6Month': '饲养满6个月',
+                'depositReturnVisit': '完成所有回访'
+            };
+            
+            for (const [id, text] of Object.entries(conditions)) {
+                if (document.getElementById(id)?.checked) {
+                    return text;
+                }
+            }
+            
+            // 检查其他条件
+            const otherCondition = getFormValue('depositReturnOther', '').trim();
+            return otherCondition || '无特殊条件';
+        }
+
+        // 添加一个获取回访时长的辅助函数
+        function getVisitDuration() {
+            const durations = {
+                'visitDuration1Month': '1个月内',
+                'visitDuration3Month': '3个月内',
+                'visitDuration6Month': '6个月内'
+            };
+            
+            for (const [id, text] of Object.entries(durations)) {
+                const element = document.getElementById(id);
+                if (element?.checked) {
+                    return text;
+                }
+            }
+            return '未指定';
+        }
+
+        // 生成领养信息图片
+        async function generateAdoptionImage() {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 设置画布尺寸
+                canvas.width = 1080;
+                canvas.height = 1540;
+                
+                // 使用更柔和的背景色
+                ctx.fillStyle = '#F8FAFC';  // 更改为浅灰白色背景
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // 调整布局参数
+                const layout = {
+                    photoSize: 400,          // 增大照片尺寸
+                    topMargin: 50,           // 顶部边距
+                    leftPadding: 50,         // 左侧边距
+                    sectionSpacing: 60,      // 段落间距
+                    lineHeight: 48,          // 增加行高
+                    titleBottomMargin: 20,   // 标下方边距
+                    columnGap: 80            // 增加列间距
+                };
+
+                // 绘制宠物照片
+                const fileInput = document.querySelector('input[type="file"]');
+                if (fileInput.files && fileInput.files[0]) {
+                    const img = new Image();
+                    img.src = URL.createObjectURL(fileInput.files[0]);
+                    
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => {
+                            const x = (canvas.width - layout.photoSize) / 2;
+                            const y = layout.topMargin;
+                            
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.roundRect(x, y, layout.photoSize, layout.photoSize, 16);
+                            ctx.clip();
+                            
+                            const scale = Math.max(layout.photoSize / img.width, layout.photoSize / img.height);
+                            const scaledWidth = img.width * scale;
+                            const scaledHeight = img.height * scale;
+                            
+                            ctx.drawImage(img, 
+                                x + (layout.photoSize - scaledWidth) / 2, 
+                                y + (layout.photoSize - scaledHeight) / 2, 
+                                scaledWidth, 
+                                scaledHeight);
+                            
+                            ctx.restore();
+                            resolve();
+                        };
+                        img.onerror = reject;
+                    });
+                }
+
+                // 调整文字始位置
+                let currentY = layout.topMargin + layout.photoSize + layout.sectionSpacing;
+                const columnWidth = (canvas.width - (layout.leftPadding * 3)) / 2;
+
+                // 优化绘制两列布局的函数
+                function drawTwoColumnSection(leftSection, rightSection, y) {
+                    // 左列标题 - 使用半透明深色
+                    ctx.fillStyle = 'rgba(31, 41, 55, 0.85)';  // 深色带透明度
+                    ctx.font = 'bold 38px "LXGW WenKai"';
+                    ctx.fillText(leftSection.title, layout.leftPadding, y);
+                    
+                    // 左列内容 - 使用更浅的文字颜色
+                    ctx.fillStyle = 'rgba(51, 51, 51, 0.75)';  // 内容文字颜色带透明度
+                    ctx.font = '34px "LXGW WenKai"';
+                    const leftContent = leftSection.content.split('\n');
+                    let currentLeftY = y + layout.titleBottomMargin + layout.lineHeight;
+                    leftContent.forEach(line => {
+                        ctx.fillText(line, layout.leftPadding, currentLeftY);
+                        currentLeftY += layout.lineHeight;
+                    });
+
+                    // 右列标题
+                    const rightColumnX = canvas.width/2 + layout.leftPadding;
+                    ctx.fillStyle = 'rgba(31, 41, 55, 0.85)';  // 深色带透明度
+                    ctx.font = 'bold 38px "LXGW WenKai"';
+                    ctx.fillText(rightSection.title, rightColumnX, y);
+                    
+                    // 右列内容
+                    ctx.fillStyle = 'rgba(51, 51, 51, 0.75)';  // 内容文字颜色带透明度
+                    ctx.font = '34px "LXGW WenKai"';
+                    const rightContent = rightSection.content.split('\n');
+                    let currentRightY = y + layout.titleBottomMargin + layout.lineHeight;
+                    rightContent.forEach(line => {
+                        ctx.fillText(line, rightColumnX, currentRightY);
+                        currentRightY += layout.lineHeight;
+                    });
+
+                    return Math.max(currentLeftY, currentRightY);
+                }
+
+                // 优化绘制单列布局的函数
+                function drawSingleColumnSection(section, y) {
+                    ctx.fillStyle = 'rgba(31, 41, 55, 0.85)';  // 深色带透明度
+                    ctx.font = 'bold 38px "LXGW WenKai"';
+                    ctx.fillText(section.title, layout.leftPadding, y);
+                    
+                    ctx.fillStyle = 'rgba(51, 51, 51, 0.75)';  // 内容文字颜色带透明度
+                    ctx.font = '34px "LXGW WenKai"';
+                    const content = section.content.split('\n');
+                    let currentY = y + layout.titleBottomMargin + layout.lineHeight;
+                    content.forEach(line => {
+                        ctx.fillText(line, layout.leftPadding, currentY);
+                        currentY += layout.lineHeight;
+                    });
+                    return currentY;
+                }
+
+                // 准备各部分内容
+                const basicInfo = {
+                    title: '基本信息',
+                    content: `名字：${getFormValue('petName', '未命名')}
+年龄：${getFormValue('petAge', '未知')}岁
+性别：${getFormValue('petGender', '未知')}
+品种：${getFormValue('petBreed', '未知')}
+体重：${getFormValue('petWeight', '未知')}kg`
+                };
+
+                const adoptionBackground = {
+                    title: '领养背景',
+                    content: `可接受领养地点：${getFormValue('adoptionLocation', '待商议')}
+宠物来历：${getFormValue('petOrigin', '未知')}
+领养原因：${getFormValue('adoptionReason', '暂无说明')}`
+                };
+
+                const healthStatus = {
+                    title: '健康状况',
+                    content: `疫苗情况：${getFormValue('vaccineStatus', '未知')}
+绝育状态：${getFormValue('sterilizationStatus', '未知')}
+体检情况：${getFormValue('medicalCheckStatus', '未知')}
+患病历史：${getFormValue('medicalHistory', '无')}`
+                };
+
+                const personality = {
+                    title: '性格特征',
+                    content: `定点大小便：${getFormValue('toiletHabit', '未知')}
+吵闹状况：${getFormValue('noiseLevel', '未知')}
+攻击性：${getFormValue('aggressiveness', '未知')}
+性格：${getFormValue('personality', '未知')}
+活跃程度：${getFormValue('energyLevel', '未知')}`
+                };
+
+                const adoptionRequirements = {
+                    title: '领养要求',
+                    content: `试养要求：${document.getElementById('trialSelect')?.value === 'yes' ? 
+                            `接受试养（${getFormValue('trialDuration', '时长未定')}）` : '不接受试养'}
+押金要求：${document.getElementById('depositSwitch')?.checked ? 
+                `需要押金${getFormValue('depositAmount', '金额未定')}元（退还条件：${getDepositReturnCondition()}）` : '不需要押金'}
+回访要求：${getVisitDuration()}，${getFormValue('visitFrequency', '待商议')}
+回访形式：${[
+    document.getElementById('visitTypeVideo')?.checked ? '视频回访' : '',
+    document.getElementById('visitTypeHome')?.checked ? '上门回访' : '',
+    document.getElementById('visitTypePhoto')?.checked ? '照片记录' : ''
+].filter(Boolean).join('、') || '待商议'}
+其他要求：${getFormValue('visitOtherRequirements', '无')}`
+                };
+
+                // 调整绘制间距
+                currentY = drawTwoColumnSection(basicInfo, adoptionBackground, currentY);
+                currentY = drawTwoColumnSection(healthStatus, personality, currentY + layout.sectionSpacing);
+                currentY = drawSingleColumnSection(adoptionRequirements, currentY + layout.sectionSpacing);
+
+                // 在绘制完所有内容后，添加水印
+                function drawWatermark() {
+                    const watermarkText = 'LingYang.000ooo.ooo';
+                    ctx.save();
+                    
+                    // 设置水印样式
+                    ctx.font = '28px "LXGW WenKai"';
+                    ctx.fillStyle = 'rgba(51, 51, 51, 0.3)';  // 使用半透明灰色
+                    
+                    // 计算水印位置（右下角，留出边距）
+                    const padding = 40;
+                    const metrics = ctx.measureText(watermarkText);
+                    const x = canvas.width - metrics.width - padding;
+                    const y = canvas.height - padding;
+                    
+                    // 绘制水印
+                    ctx.fillText(watermarkText, x, y);
+                    ctx.restore();
+                }
+
+                // 最后绘制水印
+                drawWatermark();
+
+                // 将 canvas 转换为图片并下载
+                const dataUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                const petName = document.getElementById('petName').value || '宠物';
+                link.download = `${petName}-领养信息.png`;
+                link.href = dataUrl;
+                link.click();
+                
+            } catch (error) {
+                console.error('生成图片失败:', error);
+                alert('生成图片失败，请重试');
+            }
+        }
+
+        // 生成领养协议
+        async function generateAdoptionAgreement() {
+            try {
+                // 创建内容元素
+                const element = document.createElement('div');
+                // 增加宽度以提高分辨率
+                element.style.cssText = `
+                    width: 1588px;  /* 794px * 2 - 双倍宽度提高清晰度 */
+                    min-height: 2246px;  /* 1123px * 2 */
+                    padding: 80px;  /* 40px * 2 */
+                    background: white;
+                    font-family: SimSun;
+                    box-sizing: border-box;
+                `;
+                
+                // 增加字体大小以提高清晰度
+                element.innerHTML = `
+                    <div style="font-size: 28px; line-height: 1.6;">  <!-- 字体大小翻倍 -->
+                        <h1 style="text-align: center; margin-bottom: 40px; font-size: 40px;">领养协议</h1>
+                        
+                        <!-- 被领养动物资料 -->
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="margin-bottom: 20px; font-size: 32px;">被领养的动物资料：</h3>
+                            <div style="margin-left: 40px;">
+                                <p>动物姓名：${getFormValue('petName')}</p>
+                                <p>年龄：${getFormValue('petAge')}岁</p>
+                                <p>性格特征：${getFormValue('personality')}</p>
+                                <p>品种：${getFormValue('petBreed')}</p>
+                                <p>动物性别：${getFormValue('petGender')}（${getFormValue('sterilizationStatus')}）</p>
+                                <p>免疫情况：${getFormValue('vaccineStatus')}</p>
+                                <p>健康状况：${getFormValue('medicalHistory')}</p>
+                                <p>体重：${getFormValue('petWeight')}kg</p>
+                            </div>
+                        </div>
+
+                        <!-- 协议正文 -->
+                        <div style="margin-bottom: 30px;">
+                            <p>甲、乙双方本着关爱动物，为送(领)养动物负责，保障动物福利之原则，通过平等、自愿、友好协商，就以下事项达成协议：</p>
+                        </div>
+
+                        <!-- 协议条款 -->
+                        <div style="margin-bottom: 30px;">
+                            <p>一、甲方将${getFormValue('petName')}无偿交由乙方领养。</p>
+                            
+                            <p>二、甲方的义务：</p>
+                            <div style="margin-left: 40px;">
+                                <p>1. 如实提供送养动物的基本情况包括年龄、性格、免疫情况、健康状况等以及乙方问询的其他情况。</p>
+                                <p>2. 同乙方保持联系，进行回访，了解送养动物的情况。</p>
+                                <p>3. 在乙方领养过程中提供关于小动物饲养的咨询服务。</p>
+                            </div>
+
+                            <p>三、乙方的义务：</p>
+                            <div style="margin-left: 40px;">
+                                <p>1. 符合领养动物基本条件：年满18周岁，有完全民事能力，有合法的身份证明，有固定住所，正当职业或经济能力者。</p>
+                                <p>2. 在领养${getFormValue('petName')}前，郑重考虑成员一致同意；签署领养协议后，不得因为家人反对、婚嫁、生育、工作变动、动物不所适、动物生病等原因退还领养动物。</p>
+                                <p>3. 提供适当的食物和清洁的饮用水，做到科学喂养。</p>
+                                <p>4. 按时为领养动物体检和免疫（包括疫苗、驱虫），领养动物生病时积极治疗。</p>
+                                ${getFormValue('sterilizationStatus') === '未绝育' ? 
+                                    `<p>5. 对领养时尚未绝育的领养动物，按照约定时间（通常为领养动物一周岁左右）进行绝育。</p>` : ''}
+                                <p>6. 在住所为领养动物提供适当的活动空间并保证领养动物的安全。</p>
+                                <p>7. 不得虐待或遗弃领养动物。</p>
+                            </div>
+
+                            ${document.getElementById('depositSwitch')?.checked ? `
+                            <p>四、押金条款：</p>
+                            <div style="margin-left: 40px;">
+                                <p>1. 乙方同意向甲方支付领养押金￥${getFormValue('depositAmount')}.00</p>
+                                <p>2. 押金退还条件：${getDepositReturnCondition()}</p>
+                            </div>
+                            ` : ''}
+
+                            <p>五、回访要求：</p>
+                            <div style="margin-left: 40px;">
+                                <p>1. 回访期限：${getVisitDuration()}</p>
+                                <p>2. 回访频率：${getFormValue('visitFrequency')}</p>
+                                <p>3. 回访形式：${[
+                                    document.getElementById('visitTypeVideo')?.checked ? '视频回访' : '',
+                                    document.getElementById('visitTypeHome')?.checked ? '上门回访' : '',
+                                    document.getElementById('visitTypePhoto')?.checked ? '照片记录' : ''
+                                ].filter(Boolean).join('、')}</p>
+                                ${getFormValue('visitOtherRequirements') ? 
+                                    `<p>4. 其他要求：${getFormValue('visitOtherRequirements')}</p>` : ''}
+                            </div>
+                        </div>
+
+                        <!-- 签名区域 -->
+                        <div style="margin-top: 80px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                                <div>甲方签字：________________</div>
+                                <div>乙方签字：________________</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>日期：____年____月____日</div>
+                                <div>日期：____年____月____日</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加到文档中（但隐藏）
+                element.style.position = 'absolute';
+                element.style.left = '-9999px';
+                document.body.appendChild(element);
+
+                // 显示加载提示
+                const loadingMsg = document.createElement('div');
+                loadingMsg.textContent = '正在生成PDF，请稍候...';
+                loadingMsg.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    z-index: 9999;
+                `;
+                document.body.appendChild(loadingMsg);
+
+                try {
+                    // 等待元素渲染
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // 使用 html2canvas 生成图片，提高渲染质量
+                    const canvas = await html2canvas(element, {
+                        scale: 2, // 增加缩放比例
+                        useCORS: true,
+                        logging: true,
+                        width: 1588, // 双倍宽度
+                        height: 2246, // 双倍高度
+                        windowWidth: 1588,
+                        windowHeight: 2246,
+                        letterRendering: true, // 启用字母渲染
+                        imageTimeout: 0, // 禁用图片超时
+                        removeContainer: true, // 自动移除临时容器
+                        allowTaint: true, // 允许跨域图片
+                        backgroundColor: '#ffffff', // 设置背景色
+                        onclone: (clonedDoc) => {
+                            // 可以在这里对克隆的文档进行额外处理
+                            const clonedElement = clonedDoc.querySelector('div');
+                            if (clonedElement) {
+                                clonedElement.style.transform = 'none';
+                            }
+                        }
+                    });
+
+                    // 创建 PDF
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        unit: 'mm',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    });
+
+                    // 将 canvas 转换为图片，使用高质量设置
+                    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+                    // 添加图片到 PDF，保持比例
+                    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+
+                    // 保存 PDF
+                    pdf.save(`${getFormValue('petName', '未命名宠物')}-领养协议.pdf`);
+
+                } finally {
+                    // 清理临时元素
+                    document.body.removeChild(element);
+                    document.body.removeChild(loadingMsg);
+                }
+
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                alert('生成PDF时发生错误：' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
