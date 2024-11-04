@@ -105,7 +105,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-gray-700 mb-2">绝育状</label>
+                        <label class="block text-gray-700 mb-2">绝育状态</label>
                         <select id="sterilizationStatus" class="w-full px-3 py-2 border rounded-lg">
                             <option>已绝育</option>
                             <option>未绝育</option>
@@ -336,7 +336,7 @@
                         <div class="md:col-span-2" id="trialNotice">
                             <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                                 <p class="text-yellow-700 text-sm">
-                                    <span class="font-medium">温馨提示：</span>
+                                    <span class="font-medium">提示：</span>
                                     试养期结束后自动转为正式领养，不接受退养。请在试养期间认真考虑是否能够长期饲养。
                                 </p>
                             </div>
@@ -388,7 +388,7 @@
 
     <!-- 集中管理JavaScript代码 -->
     <script>
-        // 页面加载完成后执行
+        // 页加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化所有事件监听器
             initializeEventListeners();
@@ -416,7 +416,7 @@
                 if (['text', 'number', 'textarea'].includes(element.type) || element.tagName.toLowerCase() === 'textarea') {
                     element.addEventListener('input', saveFormData);
                 }
-                // 对于选择框、复选框和选框，使用 change 事件
+                // 对于选择框、复选框和选框，用 change 事件
                 else {
                     element.addEventListener('change', saveFormData);
                 }
@@ -716,7 +716,7 @@
                     content: `疫苗情况：${getFormValue('vaccineStatus', '未知')}
 绝育状态：${getFormValue('sterilizationStatus', '未知')}
 体检情况：${getFormValue('medicalCheckStatus', '未知')}
-患病历史：${getFormValue('medicalHistory', '无')}`
+患历史：${getFormValue('medicalHistory', '无')}`
                 };
 
                 const personality = {
@@ -790,11 +790,8 @@
             try {
                 // 创建内容元素
                 const element = document.createElement('div');
-                // 增加宽度以提高分辨率
                 element.style.cssText = `
-                    width: 1588px;  /* 794px * 2 - 双倍宽度提高清晰度 */
-                    min-height: 2246px;  /* 1123px * 2 */
-                    padding: 80px;  /* 40px * 2 */
+                    width: 1588px;  /* 794px * 2 */
                     background: white;
                     font-family: SimSun;
                     box-sizing: border-box;
@@ -802,88 +799,178 @@
                 
                 // 增加字体大小以提高清晰度
                 element.innerHTML = `
-                    <div style="font-size: 28px; line-height: 1.6;">  <!-- 字体大小翻倍 -->
-                        <h1 style="text-align: center; margin-bottom: 40px; font-size: 40px;">领养协议</h1>
-                        
-                        <!-- 被领养动物资料 -->
-                        <div style="margin-bottom: 30px;">
-                            <h3 style="margin-bottom: 20px; font-size: 32px;">被领养的动物资料：</h3>
-                            <div style="margin-left: 40px;">
-                                <p>动物姓名：${getFormValue('petName')}</p>
-                                <p>年龄：${getFormValue('petAge')}岁</p>
-                                <p>性格特征：${getFormValue('personality')}</p>
-                                <p>品种：${getFormValue('petBreed')}</p>
-                                <p>动物性别：${getFormValue('petGender')}（${getFormValue('sterilizationStatus')}）</p>
-                                <p>免疫情况：${getFormValue('vaccineStatus')}</p>
-                                <p>健康状况：${getFormValue('medicalHistory')}</p>
-                                <p>体重：${getFormValue('petWeight')}kg</p>
-                            </div>
-                        </div>
-
-                        <!-- 协议正文 -->
-                        <div style="margin-bottom: 30px;">
-                            <p>甲、乙双方本着关爱动物，为送(领)养动物负责，保障动物福利之原则，通过平等、自愿、友好协商，就以下事项达成协议：</p>
-                        </div>
-
-                        <!-- 协议条款 -->
-                        <div style="margin-bottom: 30px;">
-                            <p>一、甲方将${getFormValue('petName')}无偿交由乙方领养。</p>
+                    <div style="font-size: 42px; line-height: 1.6;">
+                        <!-- 第一页到第四页使用更大的字体 -->
+                        <div class="page first-four-pages">
+                            <h1 style="text-align: center; margin-bottom: 40px; font-size: 80px;">领养协议</h1>
                             
-                            <p>二、甲方的义务：</p>
-                            <div style="margin-left: 40px;">
-                                <p>1. 如实提供送养动物的基本情况包括年龄、性格、免疫情况、健康状况等以及乙方问询的其他情况。</p>
-                                <p>2. 同乙方保持联系，进行回访，了解送养动物的情况。</p>
-                                <p>3. 在乙方领养过程中提供关于小动物饲养的咨询服务。</p>
+                            <!-- 前言部分 -->
+                            <div style="margin-bottom: 30px;">
+                                <p>本协议由以下双方于_____年_____月_____日在_____签署：</p>
+                                <p>甲方（送养方）：________________</p>
+                                <p>身份证号：____________________</p>
+                                <p>联系电话：____________________</p>
+                                <p>乙方（领养方）：________________</p>
+                                <p>身份证号：____________________</p>
+                                <p>联系电话：____________________</p>
+                                <p>居住地址：____________________</p>
                             </div>
 
-                            <p>三、乙方的义务：</p>
-                            <div style="margin-left: 40px;">
-                                <p>1. 符合领养动物基本条件：年满18周岁，有完全民事能力，有合法的身份证明，有固定住所，正当职业或经济能力者。</p>
-                                <p>2. 在领养${getFormValue('petName')}前，郑重考虑成员一致同意；签署领养协议后，不得因为家人反对、婚嫁、生育、工作变动、动物不所适、动物生病等原因退还领养动物。</p>
-                                <p>3. 提供适当的食物和清洁的饮用水，做到科学喂养。</p>
-                                <p>4. 按时为领养动物体检和免疫（包括疫苗、驱虫），领养动物生病时积极治疗。</p>
-                                ${getFormValue('sterilizationStatus') === '未绝育' ? 
-                                    `<p>5. 对领养时尚未绝育的领养动物，按照约定时间（通常为领养动物一周岁左右）进行绝育。</p>` : ''}
-                                <p>6. 在住所为领养动物提供适当的活动空间并保证领养动物的安全。</p>
-                                <p>7. 不得虐待或遗弃领养动物。</p>
+                            <!-- 被领养动物资料 -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 style="margin-bottom: 20px; font-size: 32px;">被领养动物资料：</h3>
+                                <div style="margin-left: 40px;">
+                                    <p>动物姓名：${getFormValue('petName')}</p>
+                                    <p>年龄：${getFormValue('petAge')}岁</p>
+                                    <p>性格特征：${getFormValue('personality')}</p>
+                                    <p>品种：${getFormValue('petBreed')}</p>
+                                    <p>动物性别：${getFormValue('petGender')}（${getFormValue('sterilizationStatus')}）</p>
+                                    <p>免疫情况：${getFormValue('vaccineStatus')}</p>
+                                    <p>健康状况：${getFormValue('medicalHistory')}</p>
+                                    <p>体重：${getFormValue('petWeight')}kg</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 30px;">
+                                <p>甲、乙双方本着平等自愿、诚实信用的原则，经友好协商，就宠物领养事宜达成如下协议：</p>
+                            </div>
+                        </div>
+
+                        <div class="page first-four-pages" style="page-break-before: always;">
+                            <h2 style="margin-bottom: 30px; font-size: 64px;">协议条款</h2>
+                            
+                            <p>第一条 领养标的</p>
+                            <div style="margin-left: 80px;">
+                                <p>1.1 甲方将上述动物（以下简称"领养动物"）无偿交由乙方领养。</p>
+                                <p>1.2 乙方确认已充分了解领养动物的状况，并同意接受领养。</p>
+                            </div>
+
+                            <p>第二条 甲方的权利与义务</p>
+                            <div style="margin-left: 80px;">
+                                <p>2.1 如实提供送养动物的基本情况，包括年龄、性格、免疫情况、健康状况等以及乙方问询的其他情况。</p>
+                                <p>2.2 与乙方保持联系，进行回访，了解送养动物的情况。</p>
+                                <p>2.3 在乙方领养过程中提供关于动物饲养的咨询服务。</p>
+                                <p>2.4 甲方有权对领养动物进行定期回访和监督。</p>
+                                <p>2.5 发现乙方违反本协议约定时，甲方有权要求整改或收回领养动物。</p>
+                            </div>
+
+                            <p>第三条 乙方的权利与义务</p>
+                            <div style="margin-left: 80px;">
+                                <p>3.1 符合领养动物基本条件：年满18周岁，具有完全民事行为能力，有合法的身份证明，有固定住所，有正当职业或经济能力。</p>
+                                <p>3.2 在领养${getFormValue('petName')}前，应郑重考虑并确保家庭成员一致同意；签署领养协议后，不得因家人反对、婚嫁、生育、工作变动、动物不适应、动物生病等原因退还领养动物。</p>
+                                <p>3.3 提供适当的食物和清洁的饮用水，确保科学喂养。</p>
+                                <p>3.4 按时为领养动物体检和免疫（包括疫苗、驱虫），领养动物生病时及时治疗。</p>
+                                <p>3.5 对领养时尚未绝育的领养动物，应按照约定时间（通常为领养动物一周岁左右）进行绝育。</p>
+                                <p>3.6 在住所为领养动物提供适当的活动空间并确保领养动物的安全。</p>
+                                <p>3.7 不得虐待或遗弃领养动物。</p>
+                            </div>
+                        </div>
+
+                        <div class="page first-four-pages" style="page-break-before: always;">
+                            <div style="margin-left: 80px;">
+                                <p>3.13 乙方应确保居住环境适合领养动物生活，包括但不限于：</p>
+                                <div style="margin-left: 20px;">
+                                    <p>- 安装防护网/防盗门等安全设施</p>
+                                    <p>- 提供适当的活动空间和玩具</p>
+                                    <p>- 保持环境整洁卫生</p>
+                                </div>
+                                <p>3.14 未经甲方同意，乙方不得将领养动物用于繁殖、商业展览等营利性用途。</p>
+                                <p>3.15 乙方应保证在领养期间不会因个人原因（如购房限制、物业规定等）而无法继续饲养。</p>
                             </div>
 
                             ${document.getElementById('depositSwitch')?.checked ? `
-                            <p>四、押金条款：</p>
-                            <div style="margin-left: 40px;">
-                                <p>1. 乙方同意向甲方支付领养押金￥${getFormValue('depositAmount')}.00</p>
-                                <p>2. 押金退还条件：${getDepositReturnCondition()}</p>
+                            <p>第四条 押金条款</p>
+                            <div style="margin-left: 80px;">
+                                <p>4.1 押金金额及支付</p>
+                                <div style="margin-left: 20px;">
+                                    <p>4.1.1 乙方同意向甲方支付领养押金￥${getFormValue('depositAmount')}.00</p>
+                                    <p>4.1.2 押金支付方式：________(现金/转账/其他)</p>
+                                    <p>4.1.3 支付时间：领养动物交付时支付</p>
+                                </div>
+                                <p>4.2 押金退还条件：${getDepositReturnCondition()}</p>
+                                <p>4.3 押金扣除情形：</p>
+                                <div style="margin-left: 20px;">
+                                    <p>4.3.1 乙方违反本协议约定义务</p>
+                                    <p>4.3.2 拒绝配合回访或无故失联</p>
+                                    <p>4.3.3 发生虐待或遗弃行为</p>
+                                </div>
                             </div>
                             ` : ''}
 
-                            <p>五、回访要求：</p>
-                            <div style="margin-left: 40px;">
-                                <p>1. 回访期限：${getVisitDuration()}</p>
-                                <p>2. 回访频率：${getFormValue('visitFrequency')}</p>
-                                <p>3. 回访形式：${[
+                            <p>第五条 回访监督</p>
+                            <div style="margin-left: 80px;">
+                                <p>5.1 回访期限：${getVisitDuration()}</p>
+                                <p>5.2 回访频率：${getFormValue('visitFrequency')}</p>
+                                <p>5.3 回访方式：${[
                                     document.getElementById('visitTypeVideo')?.checked ? '视频回访' : '',
                                     document.getElementById('visitTypeHome')?.checked ? '上门回访' : '',
                                     document.getElementById('visitTypePhoto')?.checked ? '照片记录' : ''
                                 ].filter(Boolean).join('、')}</p>
                                 ${getFormValue('visitOtherRequirements') ? 
-                                    `<p>4. 其他要求：${getFormValue('visitOtherRequirements')}</p>` : ''}
+                                    `<p>5.4 其他要求：${getFormValue('visitOtherRequirements')}</p>` : ''}
+                            </div>
+
+                            <p>第六条 协议解除</p>
+                            <div style="margin-left: 80px;">
+                                <p>6.1 有下列情形之一的，甲方有权解除协议并收回领养动物：</p>
+                                <div style="margin-left: 20px;">
+                                    <p>6.1.1 乙方违反本协议约定的义务</p>
+                                    <p>6.1.2 乙方存在虐待、遗弃等行为</p>
+                                    <p>6.1.3 乙方拒绝配合回访或连续超过30天无故失联</p>
+                                    <p>6.1.4 其他严重影响领养动物权益的情形</p>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 签名区域 -->
-                        <div style="margin-top: 80px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-                                <div>甲方签字：________________</div>
-                                <div>乙方签字：________________</div>
+                        <div class="page first-four-pages" style="page-break-before: always;">
+                            <p>第七条 违约责任</p>
+                            <div style="margin-left: 80px;">
+                                <p>7.1 乙方违反本协议约定，应承担相应的责任，并赔偿因此给甲方造成的全部损失。</p>
+                                <p>7.2 如乙方存在虐待、遗弃等行为，甲方有权收回领养动物，并保留追究相关法律责任的权利。</p>
                             </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <div>日期：____年____月____日</div>
-                                <div>日期：____年____月____日</div>
+
+                            <p>第八条 其他事项</p>
+                            <div style="margin-left: 80px;">
+                                <p>8.1 本协议未尽事宜，双方可另行协商并签订补充协议。</p>
+                                <p>8.2 本协议的任何修改均应采用书面形式，并经双方签字认可。</p>
+                                <p>8.3 因本协议发生的争议，双方应友好协商解决；协商不成的，任何一方均可向甲方所在地人民法院提起诉讼。</p>
+                                <p>8.4 本协议一式两份，甲乙双方各执一份，具有同等法律效力。</p>
+                            </div>
+
+                            <!-- 签名区域 -->
+                            <div style="margin-top: 80px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                                    <div>甲方签字：________________</div>
+                                    <div>乙方签字：________________</div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>日期：____年____月____日</div>
+                                    <div>日期：____年____月____日</div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    </div>
                 `;
                 
+                // 添加 CSS 样式
+                const style = document.createElement('style');
+                style.textContent = `
+                    .page {
+                        height: 2246px;
+                        padding: 80px;
+                        box-sizing: border-box;
+                        position: relative;
+                    }
+                    .first-four-pages h3 {
+                        font-size: 48px !important;
+                    }
+                    .first-four-pages div {
+                        margin-left: 80px !important;
+                    }
+                `;
+                element.appendChild(style);
+
                 // 添加到文档中（但隐藏）
                 element.style.position = 'absolute';
                 element.style.left = '-9999px';
@@ -940,11 +1027,36 @@
                         orientation: 'portrait'
                     });
 
-                    // 将 canvas 转换为图片，使用高质量设置
-                    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                    // 获取所有页面元素
+                    const pages = element.querySelectorAll('.page');
+                    
+                    // 逐页处理
+                    for (let i = 0; i < pages.length; i++) {
+                        // 如果不是第一页，添加新页
+                        if (i > 0) {
+                            pdf.addPage();
+                        }
 
-                    // 添加图片到 PDF，保持比例
-                    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+                        // 为每一页生成 canvas
+                        const canvas = await html2canvas(pages[i], {
+                            scale: 2,
+                            useCORS: true,
+                            logging: false,
+                            width: 1588,
+                            height: 2246,
+                            windowWidth: 1588,
+                            windowHeight: 2246,
+                            letterRendering: true,
+                            allowTaint: true,
+                            backgroundColor: '#ffffff'
+                        });
+
+                        // 将 canvas 转换为图片
+                        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+                        // 添加到 PDF
+                        pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+                    }
 
                     // 保存 PDF
                     pdf.save(`${getFormValue('petName', '未命名宠物')}-领养协议.pdf`);
